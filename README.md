@@ -1,11 +1,11 @@
-# AI Security Lab: Decision-Time Attacks, Data Poisoning & ML Defense Framework
+# 🛡️ AI Security Lab: Decision-Time Attacks, Data Poisoning & ML Defense Framework
 ### Interactive Research Dashboard & Academic Evaluation Framework (CIA Assessment: 20 Marks)
 
 An interactive, production-grade cybersecurity and machine learning framework designed to evaluate and defend against **Decision-Time (Evasion) Attacks** and **Training-Time Data Poisoning** across multiple classification paradigms (**Logistic Regression, RBF SVM, Random Forest, KNN, Deep CNN**) and unsupervised clustering guardrails (**K-Means & DBSCAN**).
 
 ---
 
-## Key Features
+## 🌟 Key Features
 
 1. **20 Distinct Attack Scenarios:**
    * **10 Decision-Time / Evasion Attacks:** FGSM Untargeted, Targeted FGSM, PGD $\ell_\infty$ Multi-Step, BIM Iterative, Zeroth-Order Random Noise, Decision Boundary Hop, Salient Feature Masking, Sparse $\ell_0$ Few-Pixel Spikes, Carlini-Wagner (CW) $\ell_2$ Optimization, Black-Box Surrogate Transfer.
@@ -21,37 +21,37 @@ An interactive, production-grade cybersecurity and machine learning framework de
 
 ---
 
-## Project Architecture
+## 🏗️ Project Architecture
 
 ```
 decision_time_attack_defense/
-app.py                    # Streamlit Interactive Dashboard (10 Pages)
-main.py                   # Master CLI Benchmark Runner
-config.py                 # Hyperparameters & Registry of 20 Attacks/Defenses
-data_loader.py            # Fashion-MNIST / MNIST loader, normalization & PCA
-models.py                 # 4 ML Models (LR, SVM, RF, KNN) + PyTorch Deep CNN
-attacks.py                # Full implementations of all 20 attacks
-defenses.py               # Full implementations of all 20 defenses
-clustering.py             # K-Means and DBSCAN Anomaly Detection modules
-evaluate.py               # Comprehensive metrics (Acc, Precision, Recall, F1, ASR, L2/Linf)
-visualize.py              # Publication-grade plotting module (8 figures)
-demo_colab.ipynb          # Interactive Jupyter / Google Colab Notebook
-requirements.txt          # Python dependencies
-README.md                 # Setup, running & deployment instructions
-reports/
-    academic_project_report.md  # 20-Mark CIA Academic Report (15 marks demo + 5 marks report)
-    viva_demo_prep.md           # Faculty Viva Guide: 18 high-yield questions & answers
-    summary_tables.md           # Master reference tables (20 attacks & 20 defenses)
+├── app.py                    # Streamlit Interactive Dashboard (10 Pages)
+├── main.py                   # Master CLI Benchmark Runner
+├── config.py                 # Hyperparameters & Registry of 20 Attacks/Defenses
+├── data_loader.py            # Fashion-MNIST / MNIST loader, normalization & PCA
+├── models.py                 # 4 ML Models (LR, SVM, RF, KNN) + PyTorch Deep CNN
+├── attacks.py                # Full implementations of all 20 attacks
+├── defenses.py               # Full implementations of all 20 defenses
+├── clustering.py             # K-Means and DBSCAN Anomaly Detection modules
+├── evaluate.py               # Comprehensive metrics (Acc, Precision, Recall, F1, ASR, L2/Linf)
+├── visualize.py              # Publication-grade plotting module (8 figures)
+├── demo_colab.ipynb          # Interactive Jupyter / Google Colab Notebook
+├── requirements.txt          # Python dependencies
+├── README.md                 # Setup, running & deployment instructions
+└── reports/
+    ├── academic_project_report.md  # 20-Mark CIA Academic Report (15 marks demo + 5 marks report)
+    ├── viva_demo_prep.md           # Faculty Viva Guide: 18 high-yield questions & answers
+    └── summary_tables.md           # Master reference tables (20 attacks & 20 defenses)
 ```
 
 ---
 
-## Quick Start Guide
+## 🚀 Quick Start Guide
 
 ### 1. Installation
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/decision-time-attack-defense.git
+git clone https://github.com/Harshit-Chabria/decision-time-attack-defense.git
 cd decision_time_attack_defense
 
 # Install dependencies
@@ -75,19 +75,19 @@ python main.py
 
 ---
 
-## Deploying to Streamlit Community Cloud (Public Portfolio)
+## 🌐 Deploying to Streamlit Community Cloud (Public Portfolio)
 
 1. Push this project directory to a public GitHub repository.
 2. Visit [share.streamlit.io](https://share.streamlit.io/) and log in with GitHub.
 3. Click **"New App"** and select:
-   * **Repository:** `your-username/decision-time-attack-defense`
+   * **Repository:** `Harshit-Chabria/decision-time-attack-defense`
    * **Branch:** `main`
    * **Main file path:** `app.py`
 4. Click **Deploy!** Your AI Security Lab will be live with a public URL to share on LinkedIn and your resume.
 
 ---
 
-## Summary of Benchmark Results
+## 📊 Summary of Benchmark Results
 
 | Scenario | Attack Technique | Target Classifier | Baseline Acc | Attacked Acc | Defended Acc | ASR (%) | Recovery Rate (%) | Mapped Defense |
 | :---: | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :--- |
@@ -104,28 +104,28 @@ python main.py
 
 ---
 
-## Academic Disclaimer & Limitations
+## 🔒 Academic Disclaimer & Limitations
 
 * **Academic Purpose:** This project is built for educational, research, and portfolio demonstration purposes in adversarial machine learning and security analytics.
-* **Accuracy vs Robustness Trade-off:** Certain defenses (e.g., input quantization and spatial smoothing) trade off 1?2% of clean baseline accuracy in exchange for adversarial stability.
+* **Accuracy vs Robustness Trade-off:** Certain defenses (e.g., input quantization and spatial smoothing) trade off 1–2% of clean baseline accuracy in exchange for adversarial stability.
 * **Adaptive Adversaries:** While empirical defenses mitigate static first-order attacks, advanced adversaries using Backward Pass Differentiable Approximation (BPDA) can potentially approximate non-differentiable defense boundaries.
 
 ---
 
-## LinkedIn Showcase Post Template
+## 💼 LinkedIn Showcase Post Template
 
 ```markdown
-??? Excited to share my latest project: **AI Security Lab ? Decision-Time Attacks, Data Poisoning & ML Defense Framework**!
+🛡️ Excited to share my latest project: **AI Security Lab — Decision-Time Attacks, Data Poisoning & ML Defense Framework**!
 
 Machine learning models deployed in security-critical systems often assume clean, stationary environments. However, subtle perturbations at inference time (evasion) or corruptions during training (poisoning) can completely break classifier reliability.
 
 In this project, I built an end-to-end adversarial benchmarking and defense system:
-?? **20 Distinct Attack Scenarios:** Evaluated first-order gradient evasion (FGSM, PGD, CW), black-box transferability, salient feature masking, label flipping, and deep backdoor Trojan watermarks.
-?? **20 Corresponding Defense Mechanisms:** Implemented spatial bit-depth quantization, Madry min-max adversarial training, PCA manifold projection, loss residual trimming, and SVD spectral activation signatures.
-?? **Multi-Paradigm Classifier Comparison:** Benchmarked vulnerabilities across Logistic Regression, SVM (RBF), Random Forest, KNN, and a PyTorch Deep CNN.
-?? **Unsupervised Threat Detection:** Deployed K-Means centroid distance and DBSCAN density clustering as label-free decision guardrails.
-?? **Interactive Dashboard:** Built a modern cybersecurity research dashboard using Streamlit and Plotly for real-time adversarial experimentation and visual perturbation analysis.
+🔹 **20 Distinct Attack Scenarios:** Evaluated first-order gradient evasion (FGSM, PGD, CW), black-box transferability, salient feature masking, label flipping, and deep backdoor Trojan watermarks.
+🔹 **20 Corresponding Defense Mechanisms:** Implemented spatial bit-depth quantization, Madry min-max adversarial training, PCA manifold projection, loss residual trimming, and SVD spectral activation signatures.
+🔹 **Multi-Paradigm Classifier Comparison:** Benchmarked vulnerabilities across Logistic Regression, SVM (RBF), Random Forest, KNN, and a PyTorch Deep CNN.
+🔹 **Unsupervised Threat Detection:** Deployed K-Means centroid distance and DBSCAN density clustering as label-free decision guardrails.
+🔹 **Interactive Dashboard:** Built a modern cybersecurity research dashboard using Streamlit and Plotly for real-time adversarial experimentation and visual perturbation analysis.
 
-Check out the full repository and report: [Link to GitHub]
+Check out the full repository and report: https://github.com/Harshit-Chabria/decision-time-attack-defense
 #MachineLearning #Cybersecurity #AdversarialML #AI #DataScience #Python #Streamlit #DeepLearning
 ```

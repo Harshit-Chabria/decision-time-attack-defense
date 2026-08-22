@@ -1,7 +1,10 @@
 # AI Security Lab: Decision-Time Attacks, Data Poisoning & ML Defense Framework
 # Professional Streamlit Dashboard for Adversarial ML Research & Portfolio Demonstration
 
-import os, sys, time, json
+import os
+import sys
+import time
+import json
 import numpy as np
 import pandas as pd
 import streamlit as st
@@ -22,24 +25,32 @@ import attacks as atk
 import defenses as dfs
 from evaluate import compute_classification_metrics, compute_attack_metrics, compute_recovery_rate, get_confusion_matrix
 
+# -----------------------------------------------------------------------------
+# PAGE CONFIG & CYBERSECURITY DARK THEME STYLING
+# -----------------------------------------------------------------------------
 st.set_page_config(
     page_title="AI Security Lab | Adversarial ML & Defense",
-    page_icon="???",
+    page_icon="🛡️",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
 CUSTOM_CSS = """
 <style>
+    /* Global Theme */
     .stApp {
         background-color: #0B0F19;
         color: #E2E8F0;
         font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     }
+    
+    /* Sidebar Styling */
     section[data-testid="stSidebar"] {
         background-color: #0F172A;
         border-right: 1px solid rgba(56, 189, 248, 0.12);
     }
+    
+    /* Header Card */
     .hero-header {
         background: linear-gradient(135deg, #0F172A 0%, #1E1B4B 50%, #0F172A 100%);
         border: 1px solid rgba(99, 102, 241, 0.25);
@@ -61,6 +72,8 @@ CUSTOM_CSS = """
         color: #94A3B8;
         line-height: 1.5;
     }
+    
+    /* Stat Cards */
     .stat-card {
         background: #131B2E;
         border: 1px solid rgba(56, 189, 248, 0.15);
@@ -85,6 +98,8 @@ CUSTOM_CSS = """
         letter-spacing: 0.05em;
         margin-top: 4px;
     }
+    
+    /* Status Badges */
     .badge-danger {
         background: rgba(239, 68, 68, 0.15);
         color: #F87171;
@@ -105,6 +120,18 @@ CUSTOM_CSS = """
         font-size: 0.85rem;
         display: inline-block;
     }
+    .badge-info {
+        background: rgba(56, 189, 248, 0.15);
+        color: #38BDF8;
+        border: 1px solid rgba(56, 189, 248, 0.3);
+        padding: 4px 10px;
+        border-radius: 6px;
+        font-weight: 600;
+        font-size: 0.85rem;
+        display: inline-block;
+    }
+    
+    /* Callout Boxes */
     .callout-box {
         background: #111827;
         border-left: 4px solid #38BDF8;
@@ -114,12 +141,19 @@ CUSTOM_CSS = """
         font-size: 0.95rem;
         color: #CBD5E1;
     }
+    
+    /* Image Preview Container */
     .img-card {
         background: #131B2E;
         border: 1px solid rgba(255, 255, 255, 0.08);
         border-radius: 10px;
         padding: 14px;
         text-align: center;
+    }
+    
+    /* Streamlit widget tweaks */
+    div[data-baseweb="select"] {
+        border-radius: 8px;
     }
     .stButton>button {
         background: linear-gradient(90deg, #2563EB, #4F46E5);
@@ -138,6 +172,9 @@ CUSTOM_CSS = """
 """
 st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
 
+# -----------------------------------------------------------------------------
+# RESOURCE CACHING & DATA LOADING
+# -----------------------------------------------------------------------------
 @st.cache_resource(show_spinner="Initializing AI Security Lab Environment...")
 def load_app_resources():
     data = load_data(train_samples=2000, test_samples=500, val_samples=300, random_seed=RANDOM_SEED)
@@ -157,7 +194,7 @@ def load_summary_metrics():
 def load_poison_sweep():
     json_path = RESULTS_DIR / "poison_sweep_data.json"
     if json_path.exists():
-        with open(json_path, "r") as f:
+        with open(json_path, "r", encoding="utf-8") as f:
             return json.load(f)
     return None
 
@@ -165,10 +202,24 @@ data_dict, models_dict, kmeans_det, dbscan_det = load_app_resources()
 df_metrics = load_summary_metrics()
 poison_sweep = load_poison_sweep()
 
+# -----------------------------------------------------------------------------
+# SIDEBAR NAVIGATION
+# -----------------------------------------------------------------------------
+NAV_OVERVIEW = "🛡️ Overview"
+NAV_DEMO = "⚡ Live Demo"
+NAV_MODELS = "🧠 Model Lab"
+NAV_ATTACKS = "⚔️ Attack Lab"
+NAV_POISON = "☣️ Poisoning Lab"
+NAV_DEFENSES = "🛡️ Defense Lab"
+NAV_DETECTION = "🔍 Threat Detection"
+NAV_MATRIX = "📋 20x20 Matrix"
+NAV_ANALYTICS = "📊 Security Analytics"
+NAV_ARCH = "🏗️ Architecture"
+
 with st.sidebar:
     st.markdown("""
     <div style="text-align: center; padding-bottom: 12px;">
-        <h2 style="color: #38BDF8; margin: 0; font-weight: 800; font-size: 1.5rem;">??? AI Security Lab</h2>
+        <h2 style="color: #38BDF8; margin: 0; font-weight: 800; font-size: 1.5rem;">🛡️ AI Security Lab</h2>
         <p style="color: #94A3B8; font-size: 0.85rem; margin: 2px 0 0 0;">Adversarial ML & Defense Engine</p>
     </div>
     """, unsafe_allow_html=True)
@@ -176,23 +227,23 @@ with st.sidebar:
     st.markdown("""
     <div style="background: rgba(56, 189, 248, 0.08); border: 1px solid rgba(56, 189, 248, 0.2); border-radius: 8px; padding: 10px; margin-bottom: 16px; font-size: 0.8rem; text-align: center;">
         <span style="color: #38BDF8; font-weight: 600;">Dataset:</span> Fashion-MNIST (10 Classes)<br>
-        <span style="color: #94A3B8;">28x28 Grayscale ? 784 Dimensions</span>
+        <span style="color: #94A3B8;">28x28 Grayscale • 784 Dimensions</span>
     </div>
     """, unsafe_allow_html=True)
     
     page = st.radio(
         "Navigation",
         [
-            "??? Overview",
-            "? Live Demo",
-            "?? Model Lab",
-            "?? Attack Lab",
-            "?? Poisoning Lab",
-            "??? Defense Lab",
-            "?? Threat Detection",
-            "?? 20x20 Matrix",
-            "?? Security Analytics",
-            "??? Architecture"
+            NAV_OVERVIEW,
+            NAV_DEMO,
+            NAV_MODELS,
+            NAV_ATTACKS,
+            NAV_POISON,
+            NAV_DEFENSES,
+            NAV_DETECTION,
+            NAV_MATRIX,
+            NAV_ANALYTICS,
+            NAV_ARCH
         ],
         index=0
     )
@@ -205,10 +256,11 @@ with st.sidebar:
     </div>
     """, unsafe_allow_html=True)
 
+
 # =============================================================================
 # PAGE 1: OVERVIEW / AI SECURITY LAB
 # =============================================================================
-if page == "??? Overview":
+if page == NAV_OVERVIEW:
     st.markdown("""
     <div class="hero-header">
         <div class="hero-title">AI Security Lab</div>
@@ -252,7 +304,7 @@ if page == "??? Overview":
     </div>
     """, unsafe_allow_html=True)
     
-    st.markdown("### ?? End-to-End Pipeline Flow")
+    st.markdown("### 🔄 End-to-End Pipeline Flow")
     
     col_a, col_b = st.columns([3, 2])
     with col_a:
@@ -260,29 +312,29 @@ if page == "??? Overview":
         <div style="background: #111827; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 10px; padding: 20px;">
             <div style="display: flex; justify-content: space-between; align-items: center; text-align: center; flex-wrap: wrap; gap: 8px;">
                 <div style="background: #1E293B; padding: 10px 14px; border-radius: 8px; border: 1px solid #38BDF8; font-weight: 600; font-size: 0.85rem; color: #38BDF8;">
-                    ?? Dataset<br><span style="font-size: 0.75rem; color: #94A3B8;">Fashion-MNIST</span>
+                    📁 Dataset<br><span style="font-size: 0.75rem; color: #94A3B8;">Fashion-MNIST</span>
                 </div>
-                <div style="color: #64748B; font-weight: bold;">?</div>
+                <div style="color: #64748B; font-weight: bold;">➔</div>
                 <div style="background: #1E293B; padding: 10px 14px; border-radius: 8px; border: 1px solid #818CF8; font-weight: 600; font-size: 0.85rem; color: #818CF8;">
-                    ?? ML Models<br><span style="font-size: 0.75rem; color: #94A3B8;">LR, SVM, RF, KNN, CNN</span>
+                    🧠 ML Models<br><span style="font-size: 0.75rem; color: #94A3B8;">LR, SVM, RF, KNN, CNN</span>
                 </div>
-                <div style="color: #64748B; font-weight: bold;">?</div>
+                <div style="color: #64748B; font-weight: bold;">➔</div>
                 <div style="background: #1E293B; padding: 10px 14px; border-radius: 8px; border: 1px solid #F87171; font-weight: 600; font-size: 0.85rem; color: #F87171;">
-                    ?? Threat Engine<br><span style="font-size: 0.75rem; color: #94A3B8;">20 Attacks</span>
+                    ⚔️ Threat Engine<br><span style="font-size: 0.75rem; color: #94A3B8;">20 Attacks</span>
                 </div>
-                <div style="color: #64748B; font-weight: bold;">?</div>
+                <div style="color: #64748B; font-weight: bold;">➔</div>
                 <div style="background: #1E293B; padding: 10px 14px; border-radius: 8px; border: 1px solid #FBBF24; font-weight: 600; font-size: 0.85rem; color: #FBBF24;">
-                    ?? Detection Layer<br><span style="font-size: 0.75rem; color: #94A3B8;">K-Means / DBSCAN</span>
+                    🔍 Detection Layer<br><span style="font-size: 0.75rem; color: #94A3B8;">K-Means / DBSCAN</span>
                 </div>
-                <div style="color: #64748B; font-weight: bold;">?</div>
+                <div style="color: #64748B; font-weight: bold;">➔</div>
                 <div style="background: #1E293B; padding: 10px 14px; border-radius: 8px; border: 1px solid #34D399; font-weight: 600; font-size: 0.85rem; color: #34D399;">
-                    ??? Defense Engine<br><span style="font-size: 0.75rem; color: #94A3B8;">20 Defenses</span>
+                    🛡️ Defense Engine<br><span style="font-size: 0.75rem; color: #94A3B8;">20 Defenses</span>
                 </div>
             </div>
         </div>
         """, unsafe_allow_html=True)
         
-        st.markdown("#### ?? Key Experimental Findings")
+        st.markdown("#### 📌 Key Experimental Findings")
         st.markdown("""
         * **Decision-Time Evasion:** First-order gradient attacks (FGSM, PGD, CW) reduce clean accuracy from ~84% to under 25%. Preprocessing (4-bit quantization, median filtering) and Adversarial Training partially restore accuracy to ~75%.
         * **Data Poisoning & Backdoors:** Backdoor trojans achieve **96.4% Attack Success Rate** with dormant triggers on clean inference. SVD Spectral Signature analysis isolates and strips poisoned clusters.
@@ -290,13 +342,13 @@ if page == "??? Overview":
         """)
         
     with col_b:
-        st.markdown("#### ?? Dataset & Benchmark Metrics")
+        st.markdown("#### 📊 Dataset & Benchmark Metrics")
         st.markdown("""
         | Attribute | Specification |
         | :--- | :--- |
         | **Dataset** | Fashion-MNIST |
         | **Total Classes** | 10 Balanced Categories |
-        | **Resolution** | 28 ? 28 Grayscale (784 features) |
+        | **Resolution** | 28 × 28 Grayscale (784 features) |
         | **Evaluation Set** | 500 Test Samples |
         | **Evaluation Metrics** | Accuracy, Precision, Recall, F1, ASR, $\\ell_2$, $\\ell_\\infty$ |
         | **Clustering Algorithms** | K-Means ($k=10$) & DBSCAN ($\\epsilon=3.0$) |
@@ -327,10 +379,10 @@ if page == "??? Overview":
 # =============================================================================
 # PAGE 2: LIVE DEMO
 # =============================================================================
-elif page == "? Live Demo":
+elif page == NAV_DEMO:
     st.markdown("""
     <div class="hero-header">
-        <div class="hero-title">? Live Adversarial & Defense Demo</div>
+        <div class="hero-title">⚡ Live Adversarial & Defense Demo</div>
         <div class="hero-subtitle">Interactive Real-Time Decision-Time Attack & Defense Pipeline</div>
     </div>
     """, unsafe_allow_html=True)
@@ -360,7 +412,7 @@ elif page == "? Live Demo":
         
     strength = st.slider("Perturbation Strength (Epsilon / Intensity)", 0.02, 0.40, 0.15, step=0.01)
     
-    if st.button("? Run Live Adversarial Experiment", use_container_width=True):
+    if st.button("⚡ Run Live Adversarial Experiment", use_container_width=True):
         with st.spinner("Generating adversarial sample and executing defense pipeline in real-time..."):
             raw_sample = X_test[sample_idx:sample_idx+1]
             true_label = y_test[sample_idx]
@@ -443,7 +495,7 @@ elif page == "? Live Demo":
             linf_dist = float(np.max(np.abs(adv_sample - raw_sample)))
             
             st.markdown("---")
-            st.markdown("### ??? Real-Time Visual Transition: Clean ? Attacked ? Defended")
+            st.markdown("### 🖼️ Real-Time Visual Transition: Clean ➔ Attacked ➔ Defended")
             
             c_orig, c_atk, c_def = st.columns(3)
             with c_orig:
@@ -477,9 +529,9 @@ elif page == "? Live Demo":
                 st.markdown(f"**Perturbation:** $\\ell_2={l2_dist:.3f}$, $\\ell_\\infty={linf_dist:.2f}$")
                 st.markdown(f"**Attacked Prediction:** `{CLASS_NAMES[adv_pred]}`" + (f" ({adv_conf:.1f}%)" if adv_conf else ""))
                 if adv_pred != true_label:
-                    st.markdown('<span class="badge-danger">?? ATTACK SUCCESS (FOOLED)</span>', unsafe_allow_html=True)
+                    st.markdown('<span class="badge-danger">⚠️ ATTACK SUCCESS (FOOLED)</span>', unsafe_allow_html=True)
                 else:
-                    st.markdown('<span class="badge-success">??? ATTACK SURVIVED</span>', unsafe_allow_html=True)
+                    st.markdown('<span class="badge-success">🛡️ ATTACK SURVIVED</span>', unsafe_allow_html=True)
                     
             with c_def:
                 st.markdown("""
@@ -496,17 +548,18 @@ elif page == "? Live Demo":
                 st.markdown(f"**Applied Defense:** `{selected_defense}`")
                 st.markdown(f"**Defended Prediction:** `{CLASS_NAMES[def_pred]}`" + (f" ({def_conf:.1f}%)" if def_conf else ""))
                 if def_pred == true_label:
-                    st.markdown('<span class="badge-success">? DEFENSE RESTORED CLASSIFICATION</span>', unsafe_allow_html=True)
+                    st.markdown('<span class="badge-success">✅ DEFENSE RESTORED CLASSIFICATION</span>', unsafe_allow_html=True)
                 else:
-                    st.markdown('<span class="badge-danger">? DEFENSE INSUFFICIENT</span>', unsafe_allow_html=True)
+                    st.markdown('<span class="badge-danger">❌ DEFENSE INSUFFICIENT</span>', unsafe_allow_html=True)
+
 
 # =============================================================================
 # PAGE 3: MODEL LAB
 # =============================================================================
-elif page == "?? Model Lab":
+elif page == NAV_MODELS:
     st.markdown("""
     <div class="hero-header">
-        <div class="hero-title">?? Model Lab: Multi-Paradigm Classifiers</div>
+        <div class="hero-title">🧠 Model Lab: Multi-Paradigm Classifiers</div>
         <div class="hero-subtitle">Comparative Evaluation of 4 Classical Classifiers & Deep CNN Surrogate</div>
     </div>
     """, unsafe_allow_html=True)
@@ -528,7 +581,7 @@ elif page == "?? Model Lab":
     
     col_t, col_c = st.columns([3, 2])
     with col_t:
-        st.markdown("#### ?? Baseline Clean Performance Table")
+        st.markdown("#### 📋 Baseline Clean Performance Table")
         st.dataframe(df_m.style.format({
             "Accuracy (%)": "{:.2f}%",
             "Precision (Macro)": "{:.4f}",
@@ -553,7 +606,7 @@ elif page == "?? Model Lab":
         st.plotly_chart(fig_bar, use_container_width=True)
         
     st.markdown("---")
-    st.markdown("### ?? Model Deep Dive & Normalized Confusion Matrix")
+    st.markdown("### 🔍 Model Deep Dive & Normalized Confusion Matrix")
     
     selected_inspect = st.selectbox("Select Model to Inspect Confusion Matrix", list(models_dict.keys()), index=0)
     inspected_model = models_dict[selected_inspect]
@@ -586,7 +639,7 @@ elif page == "?? Model Lab":
         st.plotly_chart(fig_cm, use_container_width=True)
         
     with col_desc:
-        st.markdown(f"#### ?? Algorithmic Analysis: `{selected_inspect}`")
+        st.markdown(f"#### 📐 Algorithmic Analysis: `{selected_inspect}`")
         if selected_inspect == "Logistic_Regression":
             st.markdown("""
             * **Decision Boundary:** Linear hyperplanes partitioning $\\mathbb{R}^{784}$.
@@ -622,10 +675,10 @@ elif page == "?? Model Lab":
 # =============================================================================
 # PAGE 4: ATTACK LAB
 # =============================================================================
-elif page == "?? Attack Lab":
+elif page == NAV_ATTACKS:
     st.markdown("""
     <div class="hero-header">
-        <div class="hero-title">?? Attack Lab: Decision-Time Evasion</div>
+        <div class="hero-title">⚔️ Attack Lab: Decision-Time Evasion</div>
         <div class="hero-subtitle">Comprehensive Suite of 10 Decision-Time Adversarial Perturbation Attacks</div>
     </div>
     """, unsafe_allow_html=True)
@@ -654,7 +707,7 @@ elif page == "?? Attack Lab":
     st.markdown(f"**Attack Description:** {atk_info['description']}")
     
     st.markdown("---")
-    st.markdown("### ?? 3-Panel Adversarial Visualization (Original ? Heatmap ? Adversarial)")
+    st.markdown("### 🔬 3-Panel Adversarial Visualization (Original ➔ Heatmap ➔ Adversarial)")
     
     X_test, y_test = data_dict["X_test"], data_dict["y_test"]
     cnn_model = models_dict["Deep_CNN"]
@@ -702,26 +755,26 @@ elif page == "?? Attack Lab":
         plt.close(fig3)
         st.caption(f"Target Classification: Forced Misclassification")
 
-    with st.expander("?? How does this attack work? (Simple + Technical Explanation)"):
+    with st.expander("📖 How does this attack work? (Simple + Technical Explanation)"):
         st.markdown(r"""
         #### 1. Simple Explanation
         Think of the machine learning classifier as navigating a hilly terrain where elevation is the loss (error). The attack calculates which direction is "steepest uphill" and nudges the image pixels slightly in that uphill direction. Because the model's decision boundaries are sharp, this tiny nudge crosses the boundary and fools the model.
         
         #### 2. Technical Formulation
         The adversary solves constrained empirical loss maximization:
-        $$\\delta^* = \\arg\\max_{\\|\\delta\|_\\infty \\le \\epsilon} \\mathcal{L}(f_\\theta(x + \\delta), y_{true})$$
+        $$\delta^* = \arg\max_{\|\delta\|_\infty \le \epsilon} \mathcal{L}(f_\theta(x + \delta), y_{true})$$
         For FGSM, a first-order Taylor expansion yields:
-        $$x_{adv} = \\text{clip}(x + \\epsilon \\cdot \\text{sign}(\\nabla_x \\mathcal{L}(f_\\theta(x), y)), 0, 1)$$
+        $$x_{adv} = \text{clip}(x + \epsilon \cdot \text{sign}(\nabla_x \mathcal{L}(f_\theta(x), y)), 0, 1)$$
         """)
 
 
 # =============================================================================
 # PAGE 5: POISONING LAB
 # =============================================================================
-elif page == "?? Poisoning Lab":
+elif page == NAV_POISON:
     st.markdown("""
     <div class="hero-header">
-        <div class="hero-title">?? Poisoning Lab: Training-Time Attacks</div>
+        <div class="hero-title">☣️ Poisoning Lab: Training-Time Attacks</div>
         <div class="hero-subtitle">Manipulating Training Data to Corrupt Learned Decision Boundaries & Backdoor Triggers</div>
     </div>
     """, unsafe_allow_html=True)
@@ -742,7 +795,7 @@ elif page == "?? Poisoning Lab":
     
     st.markdown("---")
     if sel_p_id == 16:
-        st.markdown("### ?? Deep Backdoor / Trojan Trigger Showcase")
+        st.markdown("### 🚪 Deep Backdoor / Trojan Trigger Showcase")
         col_b1, col_b2 = st.columns(2)
         with col_b1:
             clean_s = data_dict["X_test"][0]
@@ -773,7 +826,7 @@ elif page == "?? Poisoning Lab":
             """)
             
     if poison_sweep is not None:
-        st.markdown("### ?? Poisoning Rate (%) vs Model Accuracy Degradation")
+        st.markdown("### 📈 Poisoning Rate (%) vs Model Accuracy Degradation")
         rates = poison_sweep["rates"]
         models_data = poison_sweep["models"]
         
@@ -794,13 +847,14 @@ elif page == "?? Poisoning Lab":
         )
         st.plotly_chart(fig_swp, use_container_width=True)
 
+
 # =============================================================================
 # PAGE 6: DEFENSE LAB
 # =============================================================================
-elif page == "??? Defense Lab":
+elif page == NAV_DEFENSES:
     st.markdown("""
     <div class="hero-header">
-        <div class="hero-title">??? Defense Lab: Robust Mitigation Strategies</div>
+        <div class="hero-title">🛡️ Defense Lab: Robust Mitigation Strategies</div>
         <div class="hero-subtitle">Evaluating 20 Mapped Defense Strategies for Evasion and Poisoning Threats</div>
     </div>
     """, unsafe_allow_html=True)
@@ -808,7 +862,7 @@ elif page == "??? Defense Lab":
     if df_metrics is not None:
         sel_scenario = st.selectbox(
             "Select Scenario to Inspect Defense Recovery",
-            [f"Scenario {row['id']:02d}: {row['name']} ? {row['defense_name']}" for _, row in df_metrics.iterrows()]
+            [f"Scenario {row['id']:02d}: {row['name']} ➔ {row['defense_name']}" for _, row in df_metrics.iterrows()]
         )
         scen_id = int(sel_scenario.split(":")[0].replace("Scenario ", ""))
         scen_row = df_metrics[df_metrics["id"] == scen_id].iloc[0]
@@ -824,7 +878,7 @@ elif page == "??? Defense Lab":
             st.metric("Recovery Rate", f"{scen_row['recovery_rate']:.1f}%")
             
         st.markdown("---")
-        st.markdown(f"### ??? Defense Mechanism: `{scen_row['defense_name']}`")
+        st.markdown(f"### 🛡️ Defense Mechanism: `{scen_row['defense_name']}`")
         st.markdown(f"**Defense Category:** `{scen_row['defense_type']}` | **Target Model:** `{scen_row['target_model']}`")
         
         fig_def = go.Figure(data=[
@@ -846,10 +900,10 @@ elif page == "??? Defense Lab":
 # =============================================================================
 # PAGE 7: THREAT DETECTION
 # =============================================================================
-elif page == "?? Threat Detection":
+elif page == NAV_DETECTION:
     st.markdown("""
     <div class="hero-header">
-        <div class="hero-title">?? Threat Detection: Clustering-Assisted Anomaly Detection</div>
+        <div class="hero-title">🔍 Threat Detection: Clustering-Assisted Anomaly Detection</div>
         <div class="hero-subtitle">Unsupervised Outlier Scoring using K-Means and DBSCAN Manifolds</div>
     </div>
     """, unsafe_allow_html=True)
@@ -916,10 +970,10 @@ elif page == "?? Threat Detection":
 # =============================================================================
 # PAGE 8: 20x20 MATRIX
 # =============================================================================
-elif page == "?? 20x20 Matrix":
+elif page == NAV_MATRIX:
     st.markdown("""
     <div class="hero-header">
-        <div class="hero-title">?? 20 Attacks & 20 Defenses Master Matrix</div>
+        <div class="hero-title">📋 20 Attacks & 20 Defenses Master Matrix</div>
         <div class="hero-subtitle">Searchable and Filterable Academic Evaluation Table</div>
     </div>
     """, unsafe_allow_html=True)
@@ -949,10 +1003,10 @@ elif page == "?? 20x20 Matrix":
 # =============================================================================
 # PAGE 9: SECURITY ANALYTICS
 # =============================================================================
-elif page == "?? Security Analytics":
+elif page == NAV_ANALYTICS:
     st.markdown("""
     <div class="hero-header">
-        <div class="hero-title">?? Security Analytics & Publication Visualizations</div>
+        <div class="hero-title">📊 Security Analytics & Publication Visualizations</div>
         <div class="hero-subtitle">High-Resolution Analytical Figures Generated by the Experimental Benchmark</div>
     </div>
     """, unsafe_allow_html=True)
@@ -991,10 +1045,10 @@ elif page == "?? Security Analytics":
 # =============================================================================
 # PAGE 10: ARCHITECTURE
 # =============================================================================
-elif page == "??? Architecture":
+elif page == NAV_ARCH:
     st.markdown("""
     <div class="hero-header">
-        <div class="hero-title">??? System Architecture & Framework Design</div>
+        <div class="hero-title">🏗️ System Architecture & Framework Design</div>
         <div class="hero-subtitle">Modular Structure of the Adversarial & Defense Pipeline</div>
     </div>
     """, unsafe_allow_html=True)
@@ -1005,57 +1059,57 @@ elif page == "??? Architecture":
                          AI SECURITY LAB ARCHITECTURE & PIPELINE
     =======================================================================================
     
-              ?????????????????????????????????????????????????????????????
-              ?             1. DATASET & PREPROCESSING ENGINE             ?
-              ?         Fashion-MNIST (10 Classes, 28x28 Grayscale)       ?
-              ?????????????????????????????????????????????????????????????
-                                            ?
-                                            ?
-              ?????????????????????????????????????????????????????????????
-              ?           2. MULTI-PARADIGM CLASSIFIER LAYER              ?
-              ?  Logistic Regression | RBF SVM | Random Forest | KNN | CNN ?
-              ?????????????????????????????????????????????????????????????
-                                            ?
-                    ?????????????????????????????????????????????????
-                    ?                                               ?
-                    ?                                               ?
-    ?????????????????????????????????               ?????????????????????????????????
-    ?  3A. DECISION-TIME EVASION    ?               ?    3B. DATA POISONING LAB     ?
-    ?  - FGSM / Targeted FGSM       ?               ?  - Random / Targeted Flip     ?
-    ?  - PGD Multi-Step (L-inf)     ?               ?  - Margin Support Vector      ?
-    ?  - BIM / CW L2 Optimization   ?               ?  - Feature Noise Poisoning    ?
-    ?  - Salient Feature / L0 Spike ?               ?  - Class Starvation (85%)     ?
-    ?  - Black-Box Transfer Attack  ?               ?  - Deep Backdoor Trojan (3x3) ?
-    ?????????????????????????????????               ?????????????????????????????????
-                    ?                                               ?
-                    ?????????????????????????????????????????????????
-                                            ?
-                                            ?
-              ?????????????????????????????????????????????????????????????
-              ?          4. CLUSTERING ANOMALY DETECTION LAYER            ?
-              ?  - K-Means Centroid Distance Scoring (Mahalanobis z > 2.5)?
-              ?  - DBSCAN Density Sparse Manifold Filtering (Label -1)    ?
-              ?????????????????????????????????????????????????????????????
-                                            ?
-                                            ?
-              ?????????????????????????????????????????????????????????????
-              ?              5. ROBUST DEFENSE & SANITIZATION             ?
-              ?  - 4-Bit Spatial Quantization & Median Denoising          ?
-              ?  - Madry Min-Max Adversarial Training                     ?
-              ?  - PCA Manifold Subspace Projection (50 Components)       ?
-              ?  - k-NN Label Sanitization & CV Loss Residual Trimming    ?
-              ?  - SVD Latent Activation Spectral Signature Cleansing     ?
-              ?????????????????????????????????????????????????????????????
-                                            ?
-                                            ?
-              ?????????????????????????????????????????????????????????????
-              ?           6. QUANTITATIVE EVALUATION ENGINE               ?
-              ?  Accuracy | Precision | Recall | F1 | ASR | Recovery Rate ?
-              ?????????????????????????????????????????????????????????????
+              +-----------------------------------------------------------+
+              |             1. DATASET & PREPROCESSING ENGINE             |
+              |         Fashion-MNIST (10 Classes, 28x28 Grayscale)       |
+              +-----------------------------+-----------------------------+
+                                            |
+                                            v
+              +-----------------------------------------------------------+
+              |           2. MULTI-PARADIGM CLASSIFIER LAYER              |
+              |  Logistic Regression | RBF SVM | Random Forest | KNN | CNN |
+              +-----------------------------+-----------------------------+
+                                            |
+                    +-----------------------+-----------------------+
+                    |                                               |
+                    v                                               v
+    +-------------------------------+               +-------------------------------+
+    |  3A. DECISION-TIME EVASION    |               |    3B. DATA POISONING LAB     |
+    |  - FGSM / Targeted FGSM       |               |  - Random / Targeted Flip     |
+    |  - PGD Multi-Step (L-inf)     |               |  - Margin Support Vector      |
+    |  - BIM / CW L2 Optimization   |               |  - Feature Noise Poisoning    |
+    |  - Salient Feature / L0 Spike |               |  - Class Starvation (85%)     |
+    |  - Black-Box Transfer Attack  |               |  - Deep Backdoor Trojan (3x3) |
+    +---------------+---------------+               +---------------+---------------+
+                    |                                               |
+                    +-----------------------+-----------------------+
+                                            |
+                                            v
+              +-----------------------------------------------------------+
+              |          4. CLUSTERING ANOMALY DETECTION LAYER            |
+              |  - K-Means Centroid Distance Scoring (Mahalanobis z > 2.5)|
+              |  - DBSCAN Density Sparse Manifold Filtering (Label -1)    |
+              +-----------------------------+-----------------------------+
+                                            |
+                                            v
+              +-----------------------------------------------------------+
+              |              5. ROBUST DEFENSE & SANITIZATION             |
+              |  - 4-Bit Spatial Quantization & Median Denoising          |
+              |  - Madry Min-Max Adversarial Training                     |
+              |  - PCA Manifold Subspace Projection (50 Components)       |
+              |  - k-NN Label Sanitization & CV Loss Residual Trimming    |
+              |  - SVD Latent Activation Spectral Signature Cleansing     |
+              +-----------------------------+-----------------------------+
+                                            |
+                                            v
+              +-----------------------------------------------------------+
+              |           6. QUANTITATIVE EVALUATION ENGINE               |
+              |  Accuracy | Precision | Recall | F1 | ASR | Recovery Rate |
+              +-----------------------------------------------------------+
     ```
     """, unsafe_allow_html=True)
     
-    st.markdown("### ?? Academic Citation & Project Documentation")
+    st.markdown("### 📚 Academic Citation & Project Documentation")
     st.markdown("""
     * **Project Report:** [`reports/academic_project_report.md`](file:///C:/Users/jaich/.gemini/antigravity/scratch/decision_time_attack_defense/reports/academic_project_report.md)
     * **Faculty Viva & Demo Guide:** [`reports/viva_demo_prep.md`](file:///C:/Users/jaich/.gemini/antigravity/scratch/decision_time_attack_defense/reports/viva_demo_prep.md)

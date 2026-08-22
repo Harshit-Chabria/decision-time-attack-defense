@@ -4,7 +4,7 @@
 
 ---
 
-## ?? Part 1: High-Level Concepts Explained Simply & Technically
+## 📖 Part 1: High-Level Concepts Explained Simply & Technically
 
 ### 1. What is an Evasion / Decision-Time Attack?
 * **In Simple Words:** An evasion attack happens when the model is already trained and running in production (like a security scanner or self-driving camera). An attacker subtly modifies an incoming input image by adding invisible mathematical noise so the model makes an incorrect prediction, even though a human sees the original image clearly.
@@ -30,7 +30,7 @@
 
 ---
 
-## ?? Part 2: 18 High-Yield Viva Questions & Authoritative Answers
+## 🎯 Part 2: 18 High-Yield Viva Questions & Authoritative Answers
 
 #### Q1: Why did you choose Fashion-MNIST instead of a tabular or basic toy dataset?
 > **Answer:** Fashion-MNIST offers 28x28 grayscale image features with 10 real-world fashion classes (T-shirts, Trousers, Pullovers, Dresses, Coats, Sandals, Shirts, Sneakers, Bags, Ankle boots) exhibiting natural intra-class variance and subtle boundary overlaps (e.g., Sneaker vs. Ankle boot or T-shirt vs. Shirt). It is the recognized benchmark in adversarial ML because:
@@ -65,7 +65,8 @@ abla_x \mathcal{L}))$. PGD is the universal first-order adversary (Madry et al.)
 
 #### Q6: How does Adversarial Training work and why is it considered the gold standard defense?
 > **Answer:** Adversarial training solves the robust min-max game formulated by Madry et al.:
-> $$\min_	heta \mathbb{E}_{(x, y) \sim \mathcal{D}} \left[ \max_{\delta \in \mathcal{S}} \mathcal{L}(f_	heta(x + \delta), y) ight]$$
+> $$\min_	heta \mathbb{E}_{(x, y) \sim \mathcal{D}} \left[ \max_{\delta \in \mathcal{S}} \mathcal{L}(f_	heta(x + \delta), y) 
+ight]$$
 > During training, each mini-batch is perturbed using PGD before computing weight updates. This forces the decision boundary to maintain a wide margin of confidence around the entire $\epsilon$-ball.
 
 #### Q7: What is Feature Squeezing and Bit-Depth Quantization?
@@ -87,12 +88,14 @@ abla_x \mathcal{L}))$. PGD is the universal first-order adversary (Madry et al.)
 eq y_i$, we sanitize $y_i \leftarrow c$ or prune the sample.
 
 #### Q12: How does Cross-Validated Loss Residual Trimming identify targeted label-flip poisoning?
-> **Answer:** In targeted label flipping (e.g., Sneaker $ightarrow$ Ankle boot), the image features remain Sneaker features. In a $K$-fold cross-validation scheme, sub-models trained on clean folds will predict Sneaker with high confidence, producing an abnormally high cross-entropy loss residual $-\log P(y_{poison} \mid x)$ for the poisoned sample. Trimming the top 5% loss residuals strips the poisoned points.
+> **Answer:** In targeted label flipping (e.g., Sneaker $
+ightarrow$ Ankle boot), the image features remain Sneaker features. In a $K$-fold cross-validation scheme, sub-models trained on clean folds will predict Sneaker with high confidence, producing an abnormally high cross-entropy loss residual $-\log P(y_{poison} \mid x)$ for the poisoned sample. Trimming the top 5% loss residuals strips the poisoned points.
 
 #### Q13: What is the Carlini-Wagner (CW) attack and why is it stronger than FGSM?
 > **Answer:** CW is an optimization-based attack that directly minimizes the $\ell_2$ distortion while optimizing a margin-based objective function:
 > $$\min_\delta \|\delta\|_2^2 + c \cdot \max\left(\max_{i 
-eq t} Z(x+\delta)_i - Z(x+\delta)_t, -\kappaight)$$
+eq t} Z(x+\delta)_i - Z(x+\delta)_t, -\kappa
+ight)$$
 > Unlike FGSM, which takes a fixed $\epsilon$ step that may overshoot the decision boundary, CW finds the absolute minimum $\ell_2$ distortion required to cross the margin, making it visually undetectable and resistant to defensive distillation.
 
 #### Q14: How does PCA Manifold Projection defend against Salient Feature Manipulation?
@@ -117,7 +120,7 @@ eq t} Z(x+\delta)_i - Z(x+\delta)_t, -\kappaight)$$
 
 ---
 
-## ?? Part 3: Step-by-Step 15-Mark Live Faculty Demo Script
+## 🎬 Part 3: Step-by-Step 15-Mark Live Faculty Demo Script
 
 When presenting to faculty, follow this structured 4-minute demonstration flow:
 
