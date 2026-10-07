@@ -1,5 +1,5 @@
 # Master Benchmark Runner for Decision-Time & Data-Poisoning Attacks and Defenses
-# Academic Cybersecurity & Machine Learning CIA Assignment
+# AI Security Lab: Adversarial Attacks & Defenses
 
 import os
 import sys
@@ -36,7 +36,7 @@ from visualize import (
 def run_benchmark(quick_mode=False):
     print("=" * 75)
     print("   DECISION-TIME EVASION & DATA-POISONING ATTACK/DEFENSE BENCHMARK")
-    print("   CIA Evaluation Framework: 4 Classifiers, 2 Clustering Detectors, 20 Attacks & 20 Defenses")
+    print("   Evaluation Framework: 4 Classifiers, 2 Clustering Detectors, 20 Attacks & 20 Defenses")
     print("=" * 75)
     
     # 1. Load Data
@@ -391,7 +391,7 @@ def run_benchmark(quick_mode=False):
     
     # 7. Generate Publication Figures
     print("\n" + "=" * 75)
-    print("   STAGE 6: GENERATING PUBLICATION-GRADE VISUALIZATIONS")
+    print("   STAGE 6: GENERATING VISUALIZATIONS")
     print("=" * 75)
     
     # Fig 1: Gallery

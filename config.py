@@ -1,6 +1,6 @@
 """
 Configuration and Registry for Decision-Time & Data-Poisoning Attacks and Defenses
-Academic Cybersecurity & Machine Learning CIA Assignment
+AI Security Lab: Adversarial Attacks & Defenses
 """
 
 import os

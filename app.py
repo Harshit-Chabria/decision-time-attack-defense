@@ -251,8 +251,7 @@ with st.sidebar:
     st.markdown("---")
     st.markdown("""
     <div style="font-size: 0.75rem; color: #64748B; text-align: center; line-height: 1.4;">
-        Built for academic research and demonstration in AI/ML security.<br>
-        CIA Assessment Framework (20 Marks)
+        Built for research and demonstration in AI/ML security.
     </div>
     """, unsafe_allow_html=True)
 
@@ -1109,9 +1108,8 @@ elif page == NAV_ARCH:
     ```
     """, unsafe_allow_html=True)
     
-    st.markdown("### 📚 Academic Citation & Project Documentation")
+    st.markdown("### 📚 Project Documentation")
     st.markdown("""
-    * **Project Report:** [`reports/academic_project_report.md`](file:///C:/Users/jaich/.gemini/antigravity/scratch/decision_time_attack_defense/reports/academic_project_report.md)
-    * **Faculty Viva & Demo Guide:** [`reports/viva_demo_prep.md`](file:///C:/Users/jaich/.gemini/antigravity/scratch/decision_time_attack_defense/reports/viva_demo_prep.md)
-    * **20x20 Summary Tables:** [`reports/summary_tables.md`](file:///C:/Users/jaich/.gemini/antigravity/scratch/decision_time_attack_defense/reports/summary_tables.md)
+    * **Project Report:** `reports/project_report.md`
+    * **20x20 Summary Tables:** `reports/summary_tables.md`
     """)
