@@ -1,5 +1,5 @@
 # Summary Tables: 20 Attacks & 20 Defenses
-## Comprehensive Academic Reference Matrix (CIA Practical Evaluation)
+## Attack & Defense Reference Matrix
 
 ---
 
